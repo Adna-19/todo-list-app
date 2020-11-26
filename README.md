@@ -1,8 +1,6 @@
 # TODO APP
 
-... I created this todo list app in django. There are 
-... huge variety of todo apps available. The unique 
-... thing about my app is it works for both,
+I created this todo list app in django. There are huge variety of todo apps available. The unique thing about my app is it works for both,
 
 - Authenticated Users
 - Unauthenticated Users
