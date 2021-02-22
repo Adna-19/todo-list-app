@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponseRedirect
 from .models import Todo
 import json
 
@@ -31,9 +34,15 @@ def add_todo(request):
     
     return JsonResponse("", safe=False)
 
-def edit_todo(request):
-    """Edit an existing todo"""
-    pass
+@require_POST
+@csrf_exempt
+def edit_todo(request, todo_id):
+    todo = get_object_or_404(Todo, id=todo_id)
+    title = request.POST['title']
+    todo.title = title
+    todo.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def complete_todo(request, todo_id):
     """Mark a todo as completed"""
