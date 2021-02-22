@@ -25,8 +25,6 @@ function completeTodo() {
         location.reload();
     }else{
         // mark item as completed in database
-        console.log('Item Id of Logged in user', todo_id)
-
         var url = todo_id+'/complete/'
         fetch(url, {
             method: 'POST',
@@ -45,6 +43,48 @@ function completeTodo() {
         })
     }
 }
+
+document.querySelectorAll('.edit-btn').forEach((button) => button.addEventListener('click', function() {
+    const todo_id = this.dataset.todo_id;
+    const title = this.dataset.title;
+
+    const form = document.createElement('form');
+
+    form.action = '/todo/'+todo_id+'/edit/';
+    form.method = 'POST';
+    form.className = 'edit-form';
+    form.innerHTML = `
+        <div class='input-group mt-3'>
+            <input type='text' name='title' id='${todo_id}' value='${title}' class='form-control'>
+            <input type='submit' value='save' class='btn btn-sm btn-primary'>
+        </div>
+    `;
+
+    const item = document.querySelector(`#item-${todo_id}`);
+    item.appendChild(form);
+
+    document.querySelector('#edit-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const todo_title = document.querySelector('#edit-form').title.value;
+        const todo_id = document.querySelector('#edit-form').title.id;
+    
+        const url = todo_id + '/edit/';
+    
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({'title': todo_title})
+        })
+        .then((response) => {
+            return response.json();
+        })
+    });
+
+}));
 
 function addToCookie(title, action) {
     if (action == 'add') {
