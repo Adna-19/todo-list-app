@@ -19,16 +19,21 @@
         <ul class="list-group w-75 mx-auto">
             {% if todos %}
                 {% for todo in todos %}
-                    <a style="text-decoration: none;" class="completeIt" data-todo="{{ todo.id }}" href="#"><li class="list-group-item"> {{ todo.title }} 
-                        {% if todo.completed %}
-                        <span class="badge badge-success badge-pill float-right mt-3">Completed</span>
-                        {% else %}
-                        <span class="badge badge-danger badge-pill float-right mt-3">Pending</span>
-                        {% endif %}
-                        <br>
-                        <small style="color: rgb(104, 99, 99);">{{ todo.date_created }}</small>
+                    <li class="list-group-item mb-3" id="item-{{ todo.id }}">
+                        <p class="title-{{ todo.id }}">{{ todo.title }}</p>
+                        <span class="text-secondary"><small>{{ todo.date_created }}</small></span>
+                        <hr>
+                        <span>
+                            {% if request.user.is_authenticated %}
+                                <button class="btn btn-sm btn-primary edit-btn mt-3" data-title='{{ todo.title }}' data-todo_id='{{ todo.id }}'>edit</button>
+                            {% endif %}
+                            {% if not todo.completed %}
+                                <a style="text-decoration: none;" class="completeIt btn btn-sm btn-success mt-3" data-todo="{{ todo.id }}" href="#">mark as completed</a>
+                            {% else %}
+                                <span class="btn btn-sm btn-danger mt-3">Completed</span>
+                            {% endif %}
+                        </span>
                     </li>
-                    </a>
                 {% endfor %}
             {% else %}
                 <p style="font-size: 35px; color: rgb(199, 198, 198);" class="text-center border">Empty!</p>
